@@ -1,0 +1,14 @@
+# Node modules
+Productfrontend/node_modules/
+# Build output
+Productfrontend/dist/
+ProductB/target/
+# IDE and OS files
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.env
+# Misc
+*.iml
+*.class
