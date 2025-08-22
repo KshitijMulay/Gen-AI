@@ -1,0 +1,72 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeModal()">
+      <mat-icon>close</mat-icon>
+    </button>
+    
+    <div class="product-modal">
+      <div class="product-image-section">
+        <img 
+          [src]="getProductImage(product)" 
+          [alt]="product.name"
+          (error)="onImageError($event)"
+          class="modal-product-image">
+      </div>
+      
+      <div class="product-details-section">
+        <h1 class="product-title">{{ product.name }}</h1>
+        
+        <div class="product-rating">
+          <div class="stars">
+            <mat-icon *ngFor="let star of [1,2,3,4,5]">star</mat-icon>
+          </div>
+          <span class="rating-text">4.5 (120 reviews)</span>
+        </div>
+        
+        <div class="product-price">
+          {{ product.price | currency:'INR' }}
+        </div>
+        
+        <div class="product-description">
+          <h3>Description</h3>
+          <p>{{ product.description }}</p>
+        </div>
+        
+        <div class="product-meta">
+          <div class="meta-item" *ngIf="product.createdByUsername">
+            <span class="meta-label">Seller:</span>
+            <span class="meta-value">{{ product.createdByUsername }}</span>
+          </div>
+          <div class="meta-item" *ngIf="product.createdDate">
+            <span class="meta-label">Listed:</span>
+            <span class="meta-value">{{ product.createdDate | date:'mediumDate' }}</span>
+          </div>
+        </div>
+        
+        <div class="quantity-section">
+          <label for="quantity">Quantity:</label>
+          <div class="quantity-controls">
+            <button class="qty-btn" (click)="decreaseQuantity()">-</button>
+            <input id="quantity" type="number" [(ngModel)]="quantity" min="1" class="qty-input">
+            <button class="qty-btn" (click)="increaseQuantity()">+</button>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button class="btn-primary" (click)="addToCart()">
+            <mat-icon>shopping_cart</mat-icon>
+            Add to Cart
+          </button>
+          <button class="btn-secondary" (click)="addToWishlist()" *ngIf="isLoggedIn()">
+            <mat-icon>{{ isInWishlist() ? 'favorite' : 'favorite_border' }}</mat-icon>
+            {{ isInWishlist() ? 'Remove from Wishlist' : 'Add to Wishlist' }}
+          </button>
+          <button class="btn-secondary" (click)="addToWishlist()" *ngIf="!isLoggedIn()">
+            <mat-icon>favorite_border</mat-icon>
+            Login to Wishlist
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

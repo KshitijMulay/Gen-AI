@@ -1,0 +1,113 @@
+<div class="product-container">
+  <!-- Search Bar -->
+  <div class="search-section">
+    <div class="search-bar">
+      <mat-icon>search</mat-icon>
+      <input 
+        type="text" 
+        placeholder="Search products..." 
+        [(ngModel)]="search"
+        (keyup.enter)="onSearch()"
+        (input)="onSearchInput($event)"
+        class="search-input">
+      <button class="search-btn" (click)="onSearch()" [disabled]="loading">
+        <mat-icon>{{ loading ? 'hourglass_empty' : 'search' }}</mat-icon>
+      </button>
+      <button *ngIf="search" class="clear-btn" (click)="clearSearch()">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+    <div class="filter-section">
+      <select [(ngModel)]="sortBy" (change)="onSortChange()" class="sort-select">
+        <option value="">Sort by</option>
+        <option value="name">Name A-Z</option>
+        <option value="name_desc">Name Z-A</option>
+        <option value="price">Price Low-High</option>
+        <option value="price_desc">Price High-Low</option>
+        <option value="date">Newest First</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <app-skeleton-loader 
+    *ngIf="loading" 
+    [count]="6">
+  </app-skeleton-loader>
+
+  <!-- Products Grid -->
+  <div *ngIf="!loading" class="products-grid">
+    <div *ngFor="let product of products" class="product-card">
+      <div class="product-image-container">
+        <img
+          [src]="getProductImage(product)"
+          [alt]="product.name"
+          (error)="onImageError($event)"
+          class="product-image"
+          loading="lazy">
+        <div class="product-overlay">
+          <button class="quick-view-btn" (click)="quickView(product)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </div>
+      </div>
+      
+      <div class="product-info">
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-description">{{ product.description }}</p>
+        <div class="product-rating">
+          <div class="stars">
+            <mat-icon *ngFor="let star of [1,2,3,4,5]">star</mat-icon>
+          </div>
+          <span class="rating-text">4.5 (120 reviews)</span>
+        </div>
+        <div class="product-price">{{ product.price | currency:'INR' }}</div>
+        
+        <div class="product-actions">
+          <button class="add-to-cart-btn" (click)="handleAddToCart(product)">
+            <mat-icon>shopping_cart</mat-icon>
+            {{ isLoggedIn() ? 'Add to Cart' : 'Login to Buy' }}
+          </button>
+          <button class="wishlist-btn" (click)="handleWishlist(product)" [class.active]="isLoggedIn() && isInWishlist(product)">
+            <mat-icon>{{ isLoggedIn() && isInWishlist(product) ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+        </div>
+        
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && products.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">inventory_2</mat-icon>
+    <h3>No products found</h3>
+    <p>Try adjusting your search criteria</p>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-container" *ngIf="!loading && products.length > 0">
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[6, 12, 24]"
+      (page)="onPage($event)">
+    </mat-paginator>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <mat-icon class="error-icon">error</mat-icon>
+    <h3>Something went wrong</h3>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="loadProducts()">Try Again</button>
+  </div>
+</div>
+
+<!-- Product Modal -->
+<app-product-modal 
+  *ngIf="selectedProduct" 
+  [product]="selectedProduct" 
+  (close)="closeModal()">
+</app-product-modal>

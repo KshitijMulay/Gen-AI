@@ -1,0 +1,71 @@
+// Sticky, subtle Apple-style footer
+.modern-footer {
+  background: rgba(34, 34, 59, 0.98);
+  color: #fff;
+  padding: 1.5rem 0 1.2rem 0;
+  border-radius: 2rem 2rem 0 0;
+  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.08);
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 100;
+  margin-top: 0;
+}
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+.footer-logo {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.footer-tagline {
+  font-size: 1.1rem;
+  color: #c9ada7;
+}
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+.footer-links a:hover {
+  color: #f2e9e4;
+}
+.footer-legal {
+  font-size: 0.95rem;
+  color: #c9ada7;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.footer-legal a {
+  color: #c9ada7;
+  text-decoration: underline;
+  font-size: 0.95rem;
+}
+@media (max-width: 700px) {
+  .footer-content {
+    padding: 0 1rem;
+  }
+  .footer-links {
+    gap: 1rem;
+  }
+}

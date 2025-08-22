@@ -1,0 +1,73 @@
+<nav class="modern-navbar" [class.dark-mode]="isDarkMode">
+  <div class="navbar-content">
+    <a class="navbar-logo" routerLink="/">Product App</a>
+    <div class="navbar-links">
+      <!-- Admin Navigation -->
+      <ng-container *ngIf="isLoggedIn && isAdmin()">
+        <a routerLink="/admin" class="nav-link admin-link">
+          <mat-icon>admin_panel_settings</mat-icon>
+          Admin Dashboard
+        </a>
+        <a routerLink="/products" class="nav-link">
+          <mat-icon>inventory_2</mat-icon>
+          All Products
+        </a>
+      </ng-container>
+      
+      <!-- Regular User Navigation -->
+      <ng-container *ngIf="isLoggedIn && !isAdmin()">
+        <a routerLink="/products" class="nav-link">
+          <mat-icon>inventory_2</mat-icon>
+          Products
+        </a>
+        <a routerLink="/cart" class="nav-link">
+          <mat-icon>shopping_cart</mat-icon>
+          Cart
+          <span *ngIf="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
+        </a>
+        <a routerLink="/orders" class="nav-link">
+          <mat-icon>receipt_long</mat-icon>
+          Orders
+        </a>
+        <a routerLink="/wishlist" class="nav-link">
+          <mat-icon>favorite</mat-icon>
+          Wishlist
+          <span *ngIf="wishlistCount > 0" class="cart-badge">{{ wishlistCount }}</span>
+        </a>
+        <a routerLink="/profile" class="nav-link">
+          <mat-icon>person</mat-icon>
+          Profile
+        </a>
+      </ng-container>
+      
+      <!-- Guest Navigation -->
+      <ng-container *ngIf="!isLoggedIn">
+        <a routerLink="/products" class="nav-link">
+          <mat-icon>inventory_2</mat-icon>
+          Products
+        </a>
+        <a routerLink="/login" class="nav-link">
+          <mat-icon>login</mat-icon>
+          Login
+        </a>
+        <a routerLink="/register" class="nav-link">
+          <mat-icon>person_add</mat-icon>
+          Register
+        </a>
+      </ng-container>
+      
+      <!-- Common Actions -->
+      <button class="theme-toggle" (click)="toggleTheme()">
+        <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+      <a *ngIf="isLoggedIn" (click)="logout()" class="nav-link logout-btn">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </a>
+    </div>
+  </div>
+</nav>
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+<app-footer></app-footer>

@@ -1,0 +1,77 @@
+<div class="form-container">
+  <div class="form-card">
+    <div class="form-header">
+      <h1>{{ productId ? 'Edit Product' : 'Add New Product' }}</h1>
+      <p>{{ productId ? 'Update your product details' : 'Create a new product listing' }}</p>
+    </div>
+
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+      <div class="form-group">
+        <label for="name">Product Name</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          class="form-input"
+          placeholder="Enter product name"
+          [class.error]="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+        <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="error-message">
+          Product name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          class="form-input textarea"
+          placeholder="Describe your product"
+          rows="4"
+          [class.error]="productForm.get('description')?.invalid && productForm.get('description')?.touched">
+        </textarea>
+        <div *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched" class="error-message">
+          Description is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price (₹)</label>
+        <input
+          id="price"
+          type="number"
+          formControlName="price"
+          class="form-input"
+          placeholder="0.00"
+          min="0"
+          step="0.01"
+          [class.error]="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+        <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="error-message">
+          <span *ngIf="productForm.get('price')?.errors?.['required']">Price is required</span>
+          <span *ngIf="productForm.get('price')?.errors?.['min']">Price must be greater than 0</span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Cancel
+        </button>
+        <button type="button" class="btn-outline" (click)="resetForm()">
+          <mat-icon>refresh</mat-icon>
+          Reset
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="productForm.invalid || loading">
+          <mat-icon *ngIf="loading">hourglass_empty</mat-icon>
+          <mat-icon *ngIf="!loading">{{ productId ? 'update' : 'add' }}</mat-icon>
+          <span>{{ loading ? 'Saving...' : (productId ? 'Update Product' : 'Add Product') }}</span>
+        </button>
+      </div>
+
+      <div *ngIf="error" class="error-alert">
+        <mat-icon>error</mat-icon>
+        {{ error }}
+      </div>
+    </form>
+  </div>
+</div>

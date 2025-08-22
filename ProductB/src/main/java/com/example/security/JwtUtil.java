@@ -9,13 +9,18 @@ public class JwtUtil {
     private final String jwtSecret = "secret_key";
     private final long jwtExpirationMs = 86400000; // 1 day
 
-    public String generateToken(String username) {
+
+    public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
+    }
+    public String getRoleFromToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("role", String.class);
     }
 
     public String getUsernameFromToken(String token) {

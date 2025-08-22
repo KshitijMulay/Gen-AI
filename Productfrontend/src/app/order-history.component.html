@@ -1,0 +1,35 @@
+<section class="order-history-list">
+  <div *ngFor="let order of orders" class="order-card">
+    <div class="order-header">
+      <span>Order #{{ order.id }}</span>
+      <span class="order-date">{{
+        order.orderDate | date : "mediumDate"
+      }}</span>
+    </div>
+    <div class="order-items-list">
+      <div *ngFor="let item of order.items" class="order-item-row">
+        <img
+          class="order-item-image"
+          src="assets/product-placeholder.svg"
+          alt="Product image"
+        />
+        <div class="order-item-info">
+          <div class="order-item-title">{{ item.productName }}</div>
+          <div class="order-item-qty">Qty: {{ item.quantity }}</div>
+        </div>
+        <div class="order-item-price">
+          {{ item.productPrice | currency : "INR" }}
+        </div>
+      </div>
+    </div>
+    <div class="order-total">
+      Total: {{ getOrderTotal(order) | currency : "INR" }}
+    </div>
+  </div>
+  <div
+    *ngIf="!orders.length"
+    style="text-align: center; color: #888; margin-top: 2rem"
+  >
+    <p>No orders found.</p>
+  </div>
+</section>

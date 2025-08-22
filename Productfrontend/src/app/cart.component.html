@@ -1,0 +1,60 @@
+<section class="modern-cart-list">
+  <div *ngFor="let item of cartItems" class="cart-card">
+    <img
+      class="cart-product-image"
+      [src]="getCartProductImage(item)"
+      [alt]="item.productNameAtAddTime || 'Product image'"
+      (error)="onCartImageError($event)"
+      loading="lazy"
+      width="120"
+      height="120"
+    />
+    <div class="cart-product-info">
+      <div class="cart-product-title" title="{{ item.productNameAtAddTime }}">
+        {{ item.productNameAtAddTime }}
+      </div>
+      <div class="cart-product-price">
+        {{ item.priceAtAddTime | currency : "INR" }}
+      </div>
+      <div class="cart-product-qty">
+        <label for="qty-{{ item.id }}">Qty:</label>
+        <input
+          id="qty-{{ item.id }}"
+          type="number"
+          [value]="item.quantity"
+          (change)="onQuantityChange(item, $event)"
+          min="1"
+          [attr.aria-label]="'Quantity for ' + item.productNameAtAddTime"
+        />
+      </div>
+      <div class="cart-product-total">
+        Total: {{ item.priceAtAddTime * item.quantity | currency : "INR" }}
+      </div>
+      <div class="cart-product-actions">
+        <button
+          class="cart-btn delete"
+          (click)="removeItem(item)"
+          [attr.aria-label]="
+            'Remove ' + item.productNameAtAddTime + ' from cart'
+          "
+        >
+          <i class="bi bi-trash" aria-hidden="true"></i> Remove
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-total" style="margin-top: 2rem; text-align: center">
+    <strong>Total: {{ getTotal() | currency : "INR" }}</strong>
+  </div>
+
+  <div style="display: flex; justify-content: center; margin-top: 2rem">
+    <button
+      class="cart-btn checkout"
+      (click)="proceedToCheckout()"
+      aria-label="Proceed to Checkout"
+    >
+      <i class="bi bi-bag-check" aria-hidden="true"></i> Proceed to Checkout
+    </button>
+  </div>
+</section>

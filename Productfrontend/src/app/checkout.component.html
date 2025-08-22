@@ -1,0 +1,173 @@
+<div class="checkout-container">
+  <div class="checkout-content">
+    <div class="checkout-header">
+      <h1>Checkout</h1>
+      <p>Review your order and complete payment</p>
+    </div>
+
+    <div class="checkout-sections">
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <h2>Order Summary</h2>
+        <div class="order-items">
+          <div *ngFor="let item of cartItems" class="order-item">
+            <img [src]="getProductImage(item)" [alt]="item.productNameAtAddTime" class="item-image">
+            <div class="item-details">
+              <h3>{{ item.productNameAtAddTime }}</h3>
+              <p>Quantity: {{ item.quantity }}</p>
+              <p class="item-price">{{ item.priceAtAddTime | currency:'INR' }}</p>
+            </div>
+            <div class="item-total">
+              {{ item.priceAtAddTime * item.quantity | currency:'INR' }}
+            </div>
+          </div>
+        </div>
+        <div class="order-total">
+          <div class="total-row">
+            <span>Subtotal:</span>
+            <span>{{ getSubtotal() | currency:'INR' }}</span>
+          </div>
+          <div class="total-row">
+            <span>Shipping:</span>
+            <span>{{ shippingCost | currency:'INR' }}</span>
+          </div>
+          <div class="total-row">
+            <span>Tax:</span>
+            <span>{{ getTax() | currency:'INR' }}</span>
+          </div>
+          <div class="total-row final-total">
+            <span>Total:</span>
+            <span>{{ getFinalTotal() | currency:'INR' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Form -->
+      <div class="payment-section">
+        <h2>Payment Information</h2>
+        <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()" class="payment-form">
+          
+          <!-- Shipping Address -->
+          <div class="form-section">
+            <h3>Shipping Address</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input id="fullName" type="text" formControlName="fullName" class="form-input" placeholder="Enter full name">
+                <div *ngIf="checkoutForm.get('fullName')?.invalid && checkoutForm.get('fullName')?.touched" class="error-message">
+                  Full name is required
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input id="phone" type="tel" formControlName="phone" class="form-input" placeholder="Enter phone number">
+                <div *ngIf="checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched" class="error-message">
+                  Phone number is required
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="address">Address</label>
+              <textarea id="address" formControlName="address" class="form-input" rows="3" placeholder="Enter complete address"></textarea>
+              <div *ngIf="checkoutForm.get('address')?.invalid && checkoutForm.get('address')?.touched" class="error-message">
+                Address is required
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City</label>
+                <input id="city" type="text" formControlName="city" class="form-input" placeholder="Enter city">
+                <div *ngIf="checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched" class="error-message">
+                  City is required
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="pincode">Pincode</label>
+                <input id="pincode" type="text" formControlName="pincode" class="form-input" placeholder="Enter pincode">
+                <div *ngIf="checkoutForm.get('pincode')?.invalid && checkoutForm.get('pincode')?.touched" class="error-message">
+                  Pincode is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Method -->
+          <div class="form-section">
+            <h3>Payment Method</h3>
+            <div class="payment-methods">
+              <label class="payment-option">
+                <input type="radio" formControlName="paymentMethod" value="card">
+                <span class="radio-custom"></span>
+                <mat-icon>credit_card</mat-icon>
+                Credit/Debit Card
+              </label>
+              <label class="payment-option">
+                <input type="radio" formControlName="paymentMethod" value="upi">
+                <span class="radio-custom"></span>
+                <mat-icon>account_balance_wallet</mat-icon>
+                UPI Payment
+              </label>
+              <label class="payment-option">
+                <input type="radio" formControlName="paymentMethod" value="cod">
+                <span class="radio-custom"></span>
+                <mat-icon>local_shipping</mat-icon>
+                Cash on Delivery
+              </label>
+            </div>
+          </div>
+
+          <!-- Card Details (shown only when card is selected) -->
+          <div *ngIf="checkoutForm.get('paymentMethod')?.value === 'card'" class="form-section card-details">
+            <h3>Card Details</h3>
+            <div class="form-group">
+              <label for="cardNumber">Card Number</label>
+              <input id="cardNumber" type="text" formControlName="cardNumber" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expiryDate">Expiry Date</label>
+                <input id="expiryDate" type="text" formControlName="expiryDate" class="form-input" placeholder="MM/YY" maxlength="5">
+              </div>
+              <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input id="cvv" type="text" formControlName="cvv" class="form-input" placeholder="123" maxlength="3">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="cardName">Name on Card</label>
+              <input id="cardName" type="text" formControlName="cardName" class="form-input" placeholder="Enter name as on card">
+            </div>
+          </div>
+
+          <!-- UPI Details (shown only when UPI is selected) -->
+          <div *ngIf="checkoutForm.get('paymentMethod')?.value === 'upi'" class="form-section upi-details">
+            <h3>UPI Details</h3>
+            <div class="form-group">
+              <label for="upiId">UPI ID</label>
+              <input id="upiId" type="text" formControlName="upiId" class="form-input" placeholder="yourname@upi">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="goBack()">
+              <mat-icon>arrow_back</mat-icon>
+              Back to Cart
+            </button>
+            <button type="submit" class="btn-primary" [disabled]="checkoutForm.invalid || loading">
+              <mat-icon *ngIf="loading">hourglass_empty</mat-icon>
+              <mat-icon *ngIf="!loading">payment</mat-icon>
+              <span>{{ loading ? 'Processing...' : 'Place Order' }}</span>
+            </button>
+          </div>
+
+          <div *ngIf="error" class="error-alert">
+            <mat-icon>error</mat-icon>
+            {{ error }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

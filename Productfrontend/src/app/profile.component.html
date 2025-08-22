@@ -1,0 +1,86 @@
+<div class="profile-container" [class.dark-mode]="isDarkMode">
+  <div class="profile-header">
+    <h1>My Profile</h1>
+    <p>Manage your products and account</p>
+  </div>
+
+  <div class="profile-content">
+    <!-- User Profile Info -->
+    <div class="profile-section user-info">
+      <h2>Profile Information</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Username:</label>
+          <span class="info-value">{{ currentUser }}</span>
+        </div>
+        <div class="info-item">
+          <label>Password:</label>
+          <div class="password-field">
+            <span class="info-value">{{ showPassword ? userPassword : '••••••••' }}</span>
+            <button class="eye-btn" (click)="togglePassword()">
+              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="info-item">
+          <label>Role:</label>
+          <span class="info-value role-badge">{{ userRole }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-section">
+      <div class="section-header">
+        <h2>My Products</h2>
+        <button class="add-product-btn" routerLink="/products/add">
+          <mat-icon>add</mat-icon>
+          Add Product
+        </button>
+      </div>
+
+      <div *ngIf="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading your products...</p>
+      </div>
+
+      <div *ngIf="!loading && myProducts.length === 0" class="empty-state">
+        <mat-icon class="empty-icon">inventory_2</mat-icon>
+        <h3>No products yet</h3>
+        <p>Start by adding your first product</p>
+        <button class="cta-btn" routerLink="/products/add">Add Product</button>
+      </div>
+
+      <div *ngIf="!loading && myProducts.length > 0" class="products-grid">
+        <div *ngFor="let product of myProducts" class="product-card">
+          <div class="product-image-container">
+            <img
+              [src]="getProductImage(product)"
+              [alt]="product.name"
+              (error)="onImageError($event)"
+              class="product-image">
+          </div>
+          
+          <div class="product-info">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-description">{{ product.description }}</p>
+            <div class="product-price">{{ product.price | currency:'INR' }}</div>
+            <div class="product-meta">
+              <span class="created-date">Created: {{ product.createdDate | date:'short' }}</span>
+            </div>
+            
+            <div class="product-actions">
+              <button class="edit-btn" [routerLink]="['/products/edit', product.id]">
+                <mat-icon>edit</mat-icon>
+                Edit
+              </button>
+              <button class="delete-btn" (click)="deleteProduct(product.id)">
+                <mat-icon>delete</mat-icon>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

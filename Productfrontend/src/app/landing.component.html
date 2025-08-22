@@ -1,0 +1,119 @@
+<div class="landing-container" [class.dark-mode]="isDarkMode">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">
+          Discover Amazing
+          <span class="gradient-text">Products</span>
+        </h1>
+        <p class="hero-subtitle">
+          Experience premium quality products with modern design and exceptional value. 
+          Shop with confidence and style.
+        </p>
+        <div class="hero-actions">
+          <button class="cta-primary" routerLink="/products">
+            <mat-icon>shopping_bag</mat-icon>
+            Shop Now
+          </button>
+          <button class="cta-secondary" routerLink="/register">
+            <mat-icon>person_add</mat-icon>
+            Join Us
+          </button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-number">10K+</span>
+            <span class="stat-label">Happy Customers</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">500+</span>
+            <span class="stat-label">Products</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">4.9</span>
+            <span class="stat-label">Rating</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="spline-container">
+          <div *ngIf="!showSpline" class="spline-placeholder" (click)="loadSpline()">
+            <div class="placeholder-content">
+              <mat-icon class="play-icon">play_circle_filled</mat-icon>
+              <p>Click to load 3D model</p>
+            </div>
+          </div>
+          <spline-viewer 
+            *ngIf="showSpline" 
+            url="https://prod.spline.design/VWJRUDYZsCD5xpts/scene.splinecode"
+            loading="lazy">
+          </spline-viewer>
+        </div>
+        <div class="btn floating-card card-1" routerLink="/products">
+          <mat-icon>smartphone</mat-icon>
+          <span >Electronics</span>
+        </div>
+        <div class="btn floating-card card-2" routerLink="/products">
+          <mat-icon>checkroom</mat-icon>
+          <span>Fashion</span>
+        </div>
+        <div class="btn floating-card card-3" routerLink="/products">
+          <mat-icon>home</mat-icon>
+          <span>Home & Living</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Why Choose Us?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>local_shipping</mat-icon>
+          </div>
+          <h3>Free Shipping</h3>
+          <p>Free delivery on orders above ₹999</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>security</mat-icon>
+          </div>
+          <h3>Secure Payment</h3>
+          <p>100% secure payment gateway</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>support_agent</mat-icon>
+          </div>
+          <h3>24/7 Support</h3>
+          <p>Round the clock customer support</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>cached</mat-icon>
+          </div>
+          <h3>Easy Returns</h3>
+          <p>30-day hassle-free returns</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Start Shopping?</h2>
+        <p>Join thousands of satisfied customers and discover amazing products today.</p>
+        <button class="cta-button" routerLink="/products">
+          Explore Products
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

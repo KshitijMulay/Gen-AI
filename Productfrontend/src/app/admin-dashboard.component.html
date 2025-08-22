@@ -1,0 +1,296 @@
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <p>Manage users, products, and monitor system activity</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <mat-icon>people</mat-icon>
+      <div class="stat-info">
+        <h3>{{ stats.totalUsers }}</h3>
+        <p>Total Users</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon>inventory</mat-icon>
+      <div class="stat-info">
+        <h3>{{ stats.totalProducts }}</h3>
+        <p>Total Products</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon>shopping_bag</mat-icon>
+      <div class="stat-info">
+        <h3>{{ stats.totalOrders }}</h3>
+        <p>Total Orders</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <mat-icon>attach_money</mat-icon>
+      <div class="stat-info">
+        <h3>{{ stats.totalRevenue | currency:'INR' }}</h3>
+        <p>Total Revenue</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Tables -->
+  <mat-tab-group class="admin-tabs">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="tab-label">
+          <mat-icon>people</mat-icon>
+          <span>User Management</span>
+          <div class="tab-indicator"></div>
+        </div>
+      </ng-template>
+      <div class="tab-content">
+        <div class="table-header">
+          <h3>👥 All Registered Users</h3>
+          <p>Manage users, view their activity, and monitor account status</p>
+        </div>
+        <table mat-table [dataSource]="users" class="admin-table">
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef>Username</th>
+            <td mat-cell *matCellDef="let user" (click)="viewUserDetails(user)">{{ user.username }}</td>
+          </ng-container>
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>Role</th>
+            <td mat-cell *matCellDef="let user">
+              <span class="role-badge" [class]="user.role.toLowerCase()">{{ user.role }}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="createdDate">
+            <th mat-header-cell *matHeaderCellDef>Registration Date</th>
+            <td mat-cell *matCellDef="let user">{{ user.createdDate | date:'medium' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let user">
+              <button class="action-btn view" (click)="viewUserDetails(user)">
+                <mat-icon>visibility</mat-icon>
+                View Details
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['username', 'role', 'createdDate', 'actions']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['username', 'role', 'createdDate', 'actions']"></tr>
+        </table>
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="tab-label">
+          <mat-icon>inventory</mat-icon>
+          <span>Product Inventory</span>
+          <div class="tab-indicator"></div>
+        </div>
+      </ng-template>
+      <div class="tab-content">
+        <div class="table-header">
+          <h3>📦 Product Inventory Management</h3>
+          <p>Monitor stock levels, track product performance, and manage listings</p>
+        </div>
+        <table mat-table [dataSource]="products" class="admin-table">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Product Name</th>
+            <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+          </ng-container>
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Price</th>
+            <td mat-cell *matCellDef="let product">
+              <span class="price-tag">{{ product.price | currency:'INR' }}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef>Stock</th>
+            <td mat-cell *matCellDef="let product">
+              <span class="stock-badge" [class.low-stock]="product.quantity < 5">{{ product.quantity }}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="owner">
+            <th mat-header-cell *matHeaderCellDef>Listed By</th>
+            <td mat-cell *matCellDef="let product">{{ product.createdByUsername }}</td>
+          </ng-container>
+          <ng-container matColumnDef="createdDate">
+            <th mat-header-cell *matHeaderCellDef>Listed Date</th>
+            <td mat-cell *matCellDef="let product">{{ product.createdDate | date:'medium' }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['name', 'price', 'quantity', 'owner', 'createdDate']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['name', 'price', 'quantity', 'owner', 'createdDate']"></tr>
+        </table>
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="tab-label">
+          <mat-icon>receipt_long</mat-icon>
+          <span>Order Management</span>
+          <div class="tab-indicator"></div>
+        </div>
+      </ng-template>
+      <div class="tab-content">
+        <div class="table-header">
+          <h3>📋 Order Management System</h3>
+          <p>Track all customer orders, payment status, and delivery information</p>
+        </div>
+        <table mat-table [dataSource]="orders" class="admin-table">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>Order ID</th>
+            <td mat-cell *matCellDef="let order">{{ order.id }}</td>
+          </ng-container>
+          <ng-container matColumnDef="user">
+            <th mat-header-cell *matHeaderCellDef>User</th>
+            <td mat-cell *matCellDef="let order">{{ order.username }}</td>
+          </ng-container>
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef>Total</th>
+            <td mat-cell *matCellDef="let order">{{ order.total | currency:'INR' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let order">
+              <span class="status-badge" [class]="order.status.toLowerCase()">{{ order.status }}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="orderDate">
+            <th mat-header-cell *matHeaderCellDef>Order Date</th>
+            <td mat-cell *matCellDef="let order">{{ order.orderDate | date:'short' }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['id', 'user', 'total', 'status', 'orderDate']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['id', 'user', 'total', 'status', 'orderDate']"></tr>
+        </table>
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="tab-label">
+          <mat-icon>shopping_cart</mat-icon>
+          <span>Active Carts</span>
+          <div class="tab-indicator"></div>
+        </div>
+      </ng-template>
+      <div class="tab-content">
+        <div class="table-header">
+          <h3>🛒 Active Shopping Carts</h3>
+          <p>Monitor user shopping behavior and abandoned cart analytics</p>
+        </div>
+        <table mat-table [dataSource]="carts" class="admin-table">
+          <ng-container matColumnDef="user">
+            <th mat-header-cell *matHeaderCellDef>User</th>
+            <td mat-cell *matCellDef="let cart">{{ cart.username }}</td>
+          </ng-container>
+          <ng-container matColumnDef="product">
+            <th mat-header-cell *matHeaderCellDef>Product</th>
+            <td mat-cell *matCellDef="let cart">{{ cart.productName }}</td>
+          </ng-container>
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef>Quantity</th>
+            <td mat-cell *matCellDef="let cart">{{ cart.quantity }}</td>
+          </ng-container>
+          <ng-container matColumnDef="addedDate">
+            <th mat-header-cell *matHeaderCellDef>Added Date</th>
+            <td mat-cell *matCellDef="let cart">{{ cart.addedDate | date:'short' }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['user', 'product', 'quantity', 'addedDate']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['user', 'product', 'quantity', 'addedDate']"></tr>
+        </table>
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="tab-label">
+          <mat-icon>favorite</mat-icon>
+          <span>Wishlist Analytics</span>
+          <div class="tab-indicator"></div>
+        </div>
+      </ng-template>
+      <div class="tab-content">
+        <div class="table-header">
+          <h3>❤️ Wishlist Analytics Dashboard</h3>
+          <p>Analyze user preferences and popular products for marketing insights</p>
+        </div>
+        <table mat-table [dataSource]="wishlists" class="admin-table">
+          <ng-container matColumnDef="user">
+            <th mat-header-cell *matHeaderCellDef>User</th>
+            <td mat-cell *matCellDef="let wishlist">{{ wishlist.username }}</td>
+          </ng-container>
+          <ng-container matColumnDef="product">
+            <th mat-header-cell *matHeaderCellDef>Product</th>
+            <td mat-cell *matCellDef="let wishlist">{{ wishlist.productName }}</td>
+          </ng-container>
+          <ng-container matColumnDef="addedDate">
+            <th mat-header-cell *matHeaderCellDef>Added Date</th>
+            <td mat-cell *matCellDef="let wishlist">{{ wishlist.addedDate | date:'short' }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['user', 'product', 'addedDate']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['user', 'product', 'addedDate']"></tr>
+        </table>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- User Details Panel -->
+  <div class="user-details-overlay" *ngIf="showUserDetailsPanel" (click)="closeUserDetails()">
+    <div class="user-details-panel" (click)="$event.stopPropagation()">
+      <div class="panel-header">
+        <h2>{{ selectedUser?.username }} - User Profile</h2>
+        <button class="close-btn" (click)="closeUserDetails()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      
+      <div class="user-stats-grid">
+        <div class="stat-item">
+          <mat-icon>inventory</mat-icon>
+          <span class="stat-number">{{ userProducts.length }}</span>
+          <span class="stat-label">Products Listed</span>
+        </div>
+        <div class="stat-item">
+          <mat-icon>receipt</mat-icon>
+          <span class="stat-number">{{ userOrders.length }}</span>
+          <span class="stat-label">Orders Placed</span>
+        </div>
+        <div class="stat-item">
+          <mat-icon>shopping_cart</mat-icon>
+          <span class="stat-number">{{ userCarts.length }}</span>
+          <span class="stat-label">Cart Items</span>
+        </div>
+        <div class="stat-item">
+          <mat-icon>favorite</mat-icon>
+          <span class="stat-number">{{ userWishlists.length }}</span>
+          <span class="stat-label">Wishlist Items</span>
+        </div>
+      </div>
+
+      <div class="user-activity-tabs">
+        <mat-tab-group>
+          <mat-tab label="Products">
+            <div class="activity-content">
+              <div *ngFor="let product of userProducts" class="activity-item">
+                <strong>{{ product.name }}</strong>
+                <span class="price">{{ product.price | currency:'INR' }}</span>
+                <span class="date">{{ product.createdDate | date:'short' }}</span>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="Orders">
+            <div class="activity-content">
+              <div *ngFor="let order of userOrders" class="activity-item">
+                <strong>Order #{{ order.id }}</strong>
+                <span class="price">{{ order.total | currency:'INR' }}</span>
+                <span class="status" [class]="order.status.toLowerCase()">{{ order.status }}</span>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</div>
